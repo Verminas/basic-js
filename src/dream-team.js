@@ -21,7 +21,7 @@ function createDreamTeam(members) {
   if (!Array.isArray(members)) return false;
   const arr = members.map(function(item) {
     if (typeof item ==='string') {
-      return item.trim();
+      return item.toLowerCase().trim();
     }
   }).sort();
   arr.forEach(function(item) {

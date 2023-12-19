@@ -16,10 +16,6 @@ function getSeason(date) {
   // remove line with error and write your code here
 
   let result;
-  if (typeof date !== 'object') {
-    result = 'Unable to determine the time of year!';
-    return result;
-  }
   const year = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDate();
@@ -93,26 +89,56 @@ function getSeason(date) {
   let hasErrors = 0;
   let leapYear = false;
 
-  try {
-    for (let i = 0; i < seasonsDates.length; i += 1) {
-      let seasonDate= seasonsDates[i];
-      seasonDate.period[0].numberMonth;
-    }
 
-    if (hasErrors > 0) {
-     throw new Error('Invalid date!');
+  try {
+    if (date == undefined || date == null) {
+      result = 'Unable to determine the time of year!';
+      return result;
     }
-    return result;
+    if (typeof date !== 'object' || isNaN(date.getTime())) {
+      hasErrors += 1;
+    }
+    if (hasErrors > 0) {
+      throw new Error('Invalid date!');
+    }
   } catch(e) {
     return e.message;
   }
 
+  if (year % 4 == 0) leapYear = true;
 
+  if (hasErrors == 0) {
+    try {
+      for (let i = 0; i < seasonsDates.length; i += 1) {
+        let seasonDate= seasonsDates[i];
+        for (let j = 0; j < seasonDate.period.length; j += 1) {
+          if (month == seasonDate.period[j].numberMonth) {
+            if (!leapYear) {
+              if (day > 0 && day <= seasonDate.period[j].countOfDays) {
+                result = seasonDate.name;
+              } else {
+                hasErrors += 1;
+              }
+            }
+            if (leapYear && month == seasonsDates[0].period[1].numberMonth) {
+              if (day > 0 && day <= seasonsDates[0].period[1].countOfDaysLeap) {
+                result = seasonsDates[0].name;
+              } else {
+                hasErrors += 1;
+              }
+            }
+          }
+        }
+      }
+      if (hasErrors > 0) {
+        throw new Error('Invalid date!');
+      }
+      return result;
+    } catch(e) {
+      return e.message;
+    }
+  }
 }
-
-
-
-
 module.exports = {
   getSeason
 };

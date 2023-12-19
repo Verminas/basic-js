@@ -132,12 +132,16 @@ const { NotImplementedError } = require('../extensions/index.js');
 //   return result;
 // }
 function getSeason(date) {
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-
-  if (!(date instanceof Date) || isNaN(date)) {
+  if (date === undefined) {
     return 'Unable to determine the time of year!';
   }
+
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    return 'Invalid date!';
+  }
+
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
 
   if ((month === 12 && day >= 1) || (month <= 2 && day <= 28)) {
     return 'winter';

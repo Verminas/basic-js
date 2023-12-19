@@ -78,6 +78,7 @@ function transform(arr) {
 
     let arrCopy = arr.slice();
     const controlSequences = ['--discard-next', '--discard-prev', '--double-next', '--double-prev'];
+    let result = [];
 
     function checkNotControlSequences(arrCopy) {
         for (let i = 0; i < arrCopy.length; i += 1) {
@@ -91,40 +92,26 @@ function transform(arr) {
     let checkControlsFirst = checkNotControlSequences(arrCopy);
 
     if (checkControlsFirst) {
-        for (let i = 0; i < arrCopy.length; i += 1) {
-            if (arrCopy[i] === '--discard-next') {
-                if (arrCopy[i + 1] !== undefined) {
-                    arrCopy.splice(i, 2);
-                    i -= 1; // Обновляем индекс после удаления элементов
-                } else {
-                    arrCopy.splice(i, 1);
-                    i -= 1; // Обновляем индекс после удаления элемента
+        for (let i = 0; i < arr.length; i += 1) {
+            if (arr[i] === '--discard-next') {
+                i += 1;
+            } else if (arr[i] === '--discard-prev') {
+                if (i > 0 && arr[i - 2] !== '--discard-next') {
+                    result.pop();
                 }
-            } else if (arrCopy[i] === '--discard-prev') {
-                if (arrCopy[i - 1] !== undefined) {
-                    arrCopy.splice(i - 1, 2);
-                    i -= 2; // Обновляем индекс после удаления элементов
-                } else {
-                    arrCopy.splice(i, 1);
-                    i -= 1; // Обновляем индекс после удаления элемента
+            } else if (arr[i] === '--double-next') {
+                if (i < arr.length - 1) {
+                    result.push(arr[i + 1]);
                 }
-            } else if (arrCopy[i] === '--double-next') {
-                if (arrCopy[i + 1] !== undefined) {
-                    arrCopy.splice(i, 1, arrCopy[i + 1]);
-                } else {
-                    arrCopy.splice(i, 1);
-                    i -= 1; // Обновляем индекс после удаления элемента
+            } else if (arr[i] === '--double-prev') {
+                if (i > 0 && arr[i - 2] !== '--discard-next') {
+                    result.push(arr[i - 1]);
                 }
-            } else if (arrCopy[i] === '--double-prev') {
-                if (arrCopy[i - 1] !== undefined) {
-                    arrCopy.splice(i, 1, arrCopy[i - 1]);
-                } else {
-                    arrCopy.splice(i, 1);
-                    i -= 1; // Обновляем индекс после удаления элемента
-                }
+            } else {
+                result.push(arr[i]);
             }
         }
-        return arrCopy;
+        return result;
     } else {
         return arrCopy;
     }

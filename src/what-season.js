@@ -137,7 +137,7 @@ function getSeason(date) {
   }
 
   if (!(date instanceof Date) || isNaN(date.getTime())) {
-    return 'Invalid date!';
+    throw new Error('Invalid date!');
   }
 
   const month = date.getMonth() + 1;
@@ -152,7 +152,7 @@ function getSeason(date) {
   } else if (month >= 9 && month <= 11) {
     return 'autumn';
   } else {
-    return 'Invalid date!';
+    throw new Error('Invalid date!');
   }
 }
 module.exports = {

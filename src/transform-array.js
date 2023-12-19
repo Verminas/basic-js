@@ -23,50 +23,50 @@ function transform(arr) {
     if (arr.length === 0) return arr;
     let arrCopy = arr.slice();
     const controlSequences = ['--discard-next', '--discard-prev', '--double-next', '--double-prev'];
-    function checkControlSequences(arrCopy) {
+    function checkNotControlSequences(arrCopy) {
       for (let i = 0; i < arrCopy.length; i += 1) {
         for (let j = 0; j < controlSequences.length; j += 1) {
           if (arrCopy[i] !== controlSequences[j]) {
-            return arrCopy;
+            return true;
           }
         }
       }
     }
-    let checkControlsFirst = checkControlSequences(arrCopy);
-     return checkControlsFirst;
+    let checkControlsFirst = checkNotControlSequences(arrCopy);
+    if (checkControlsFirst) {
+        return arrCopy;
+    } else {
+        for (let i = 0; i < arrCopy.length; i += 1) {
+            for (let j = 0; j < controlSequences.length; j += 1) {
+                if (arrCopy[i] == controlSequences[j]) {
+                    if (arrCopy[i].includes('discard')) {
+                        if (arrCopy[i].includes('next') && arrCopy[i + 1] !== undefined) {
+                            arrCopy.splice(i, 2);
+                        }
+                        if (arrCopy[i].includes('next') && arrCopy[i + 1] == undefined) {
+                            arrCopy.splice(i, 1);
+                        }
+                        if (arrCopy[i].includes('prev') && arrCopy[i - 1] !== undefined) {
+                            arrCopy.splice(i - 1, 2);
+                        }
+                        if (arrCopy[i].includes('prev') && arrCopy[i - 1] == undefined) {
+                            arrCopy.splice(i - 1, 1);
+                        }
+                    }
 
-    for (let i = 0; i < arrCopy.length; i += 1) {
-        for (let j = 0; j < controlSequences.length; j += 1) {
-            if (arrCopy[i] == controlSequences[j]) {
-                if (arrCopy[i].includes('discard')) {
-                    if (arrCopy[i].includes('next') && arrCopy[i + 1] !== undefined) {
-                        arrCopy.splice(i, 2);
-                    }
-                    if (arrCopy[i].includes('next') && arrCopy[i + 1] == undefined) {
-                        arrCopy.splice(i, 1);
-                    }
-                    if (arrCopy[i].includes('prev') && arrCopy[i - 1] !== undefined) {
-                        arrCopy.splice(i - 1, 2);
-                    }
-                    if (arrCopy[i].includes('prev') && arrCopy[i - 1] == undefined) {
-                        arrCopy.splice(i - 1, 1);
-                    }
-                }
-
-                if (arrCopy[i].includes('double')) {
-                    if (arrCopy[i].includes('next') && arrCopy[i + 1] !== undefined) {
-                        arrCopy.splice(i, 1, arrCopy[i + 1]);
-                    }
-                    if (arrCopy[i].includes('prev') && arrCopy[i - 1] !== undefined) {
-                        arrCopy.splice(i, 1, arrCopy[i - 1]);
+                    if (arrCopy[i].includes('double')) {
+                        if (arrCopy[i].includes('next') && arrCopy[i + 1] !== undefined) {
+                            arrCopy.splice(i, 1, arrCopy[i + 1]);
+                        }
+                        if (arrCopy[i].includes('prev') && arrCopy[i - 1] !== undefined) {
+                            arrCopy.splice(i, 1, arrCopy[i - 1]);
+                        }
                     }
                 }
             }
         }
+        return arrCopy;
     }
-
-    return arrCopy;
-
 }
 
 module.exports = {

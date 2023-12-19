@@ -142,15 +142,32 @@ function getSeason(date) {
 
   const month = date.getMonth() + 1;
   const day = date.getDate();
+  const year = date.getFullYear();
+  let leapYear = false;
 
-  if ((month === 12 && day >= 1) || (month <= 2 && day <= 28)) {
+  if (year <=0 || month <= 0 || day <= 0) {
+    throw new Error('Invalid date!');
+  }
+  if (month > 12 || day > 31) {
+    throw new Error('Invalid date!');
+  }
+
+  if (year % 4 === 0) leapYear = true;
+
+  if (((month === 12 || month === 1) && day >= 1) || (month === 2 && (!leapYear && day <= 28 || leapYear && day <= 29))) {
     return 'winter';
   } else if (month >= 3 && month <= 5) {
-    return 'spring';
+    if (month == 4 && day > 30) {
+      throw new Error('Invalid date!');
+    } else return 'spring';
   } else if (month >= 6 && month <= 8) {
-    return 'summer';
+    if (month == 6 && day > 30) {
+      throw new Error('Invalid date!');
+    } else return 'summer';
   } else if (month >= 9 && month <= 11) {
-    return 'autumn';
+    if ((month == 9 || month == 11) && day > 30) {
+      throw new Error('Invalid date!');
+    } else return 'autumn';
   } else {
     throw new Error('Invalid date!');
   }

@@ -16,93 +16,31 @@ const { NotImplementedError } = require('../extensions/index.js');
  *
  */
 function repeater(str, options) {
-  // throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
-
   let result = '';
-  let newStr = '';
-  let newAddition = '';
-  let repeatTimes;
-  let additionRepeatTimes;
-  let separator = '';
-  let additionSeparator = '';
+  let newStr = String(str);
+  let newAddition = options.addition !== undefined ? String(options.addition) : '';
+  let repeatTimes = options.repeatTimes !== undefined ? options.repeatTimes : 1;
+  let separator = options.separator !== undefined ? String(options.separator) : '+';
+  let additionRepeatTimes = options.additionRepeatTimes !== undefined ? options.additionRepeatTimes : 1;
+  let additionSeparator = options.additionSeparator !== undefined ? String(options.additionSeparator) : '|';
 
-  let changeSepAddit = '';
-  let changeBigStr = '';
+  for (let i = 0; i < repeatTimes; i++) {
+    result += newStr;
 
-  if (options.length == 0) return str;
+    for (let j = 0; j < additionRepeatTimes; j++) {
+      result += newAddition;
 
-  if (typeof str !== 'string') {
-    newStr = String(str);
-  } else {
-    newStr = str;
-  }
+      if (j !== additionRepeatTimes - 1) {
+        result += additionSeparator;
+      }
+    }
 
-  if (!isFalse(newAddition)) {
-    if (typeof options.addition !== 'string') {
-      newAddition = String(options.addition);
-    } else {
-      newAddition = options.addition;
-    }
-  } else {
-    newAddition = false;
-  }
-
-  if (!options.hasOwnProperty(repeatTimes) || options.repeatTimes == false || options.repeatTimes == '0') {
-    repeatTimes = 1;
-  } else {
-    repeatTimes = options.repeatTimes;
-  }
-  if (!options.hasOwnProperty(separator) || options.separator == false) {
-    separator = '+';
-  } else {
-    separator = options.separator;
-  }
-  if (!options.hasOwnProperty(additionRepeatTimes) || options.additionRepeatTimes == false || options.additionRepeatTimes == '0') {
-    additionRepeatTimes = 1;
-  } else {
-    additionRepeatTimes = options.additionRepeatTimes;
-  }
-  if (!options.hasOwnProperty(additionSeparator) || options.additionSeparator == false) {
-    additionSeparator = '|';
-  } else {
-    additionSeparator = options.additionSeparator;
-  }
-  function repeatStr(string) {
-    return string.repeat(repeatTimes);
-  }
-  function addSeparatorStr(string) {
-    if (repeatTimes > 1) {
-      return separator + string;
-    }
-  }
-  function addAdditional(string) {
-    if (newAddition) {
-      return string + newAddition;
-    }
-  }
-  function repeatAdditional(string) {
-    return string.repeat(additionRepeatTimes);
-  }
-  function addAdditionSeparator(string) {
-    if (additionRepeatTimes > 1) {
-      return additionSeparator + string;
-    }
-  }
-  if (newAddition) {
-    if (newAddition) {
-      result = addAdditional(newStr);
-    }
-    if (additionRepeatTimes > 1) {
-      result
+    if (i !== repeatTimes - 1) {
+      result += separator;
     }
   }
 
-
-
-
-
-
+  return result;
 }
 
 module.exports = {

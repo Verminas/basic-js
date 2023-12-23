@@ -77,6 +77,42 @@ class VigenereCipheringMachine {
     // remove line with error and write your code here
     if (message === undefined || key === undefined) {
       throw new Error('Incorrect arguments!');
+    } else {
+      message = message.toUpperCase();
+      let newKey = '';
+      let keyIndex = 0;
+      for (let i = 0; i < message.length; i++) {
+        if (this.alphabet.includes(message[i])) {
+          newKey += key[keyIndex];
+          keyIndex = (keyIndex + 1) % key.length;
+        } else {
+          newKey += message[i];
+        }
+      }
+      newKey = newKey.toUpperCase();
+      let decryptMessage = '';
+      let decryptChar = '';
+      for (let i = 0; i < message.length; i++) {
+
+        let indexCharNewKey = this.alphabet.indexOf(newKey[i]);
+        if (indexCharNewKey !== -1) {
+          let char = this.squareVigenere[indexCharNewKey].indexOf(message[i]);
+          decryptChar = this.alphabet[char];
+        } else {
+          decryptChar = message[i];
+        }
+        decryptMessage += decryptChar;
+      }
+
+      if (this.direct || this.direct === undefined) {
+        return decryptMessage;
+      } else {
+        let invertedenDecryptMessage = '';
+        for (let index = decryptMessage.length - 1; index > -1; index--) {
+          invertedenDecryptMessage += decryptMessage[index];
+        }
+        return invertedenDecryptMessage;
+      }
     }
   }
 }

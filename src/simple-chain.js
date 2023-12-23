@@ -33,7 +33,7 @@ const chainMaker = {
       this.resultChain = '';
       this.currentArray = [];
       this.checkChain = true;
-      this.addLink(value);
+      return this.addLink(value);
     }
 
 
@@ -41,7 +41,7 @@ const chainMaker = {
   removeLink(position) {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-    if (position < 1 || position > this.currentArray.length) {
+    if (position < 1 || position > this.getLength()) {
       this.currentArray = [];
       this.resultChain = '';
       this.checkChain = false;

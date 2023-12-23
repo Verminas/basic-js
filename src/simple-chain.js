@@ -44,21 +44,25 @@ const chainMaker = {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
     if (typeof position !== 'number' || position < 1) {
+      this.resultChain = '';
       throw new Error('You can\'t remove incorrect link!');
     }
     if (this.checkChain) {
       let arr = [];
       let newArr = [];
       arr = this.resultChain.split('~~');
-      if ((typeof position === 'number' || typeof position === 'bigint' ) && arr[position - 1] !== undefined) {
+      if (arr[position - 1] !== undefined) {
         for (let i = 0; i < arr.length; i += 1) {
           if (i !== position - 1) {
             newArr.push(arr[i]);
           }
         }
         this.resultChain = newArr.join('~~');
+        arr = [];
+        newArr = [];
 
       } else {
+        this.resultChain = '';
         throw new Error('You can\'t remove incorrect link!');
       }
       return this;
@@ -89,6 +93,7 @@ const chainMaker = {
   finishChain() {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
+    this.resultChain = String(this.resultChain);
     if (this.resultChain.endsWith('~~')) {
       this.checkChain = false;
       return this.resultChain.slice(0, -2);
@@ -97,6 +102,7 @@ const chainMaker = {
       this.checkChain = false;
       return this.resultChain.slice(2);
     }
+    this.resultChain = '';
   }
 };
 

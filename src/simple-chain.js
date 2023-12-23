@@ -8,16 +8,12 @@ const chainMaker = {
   simpleChain: '(  )',
   // chainWithValue: `(${this.value})~~`,
   resultChain: '',
+  currentArray: [],
   checkChain: true,
   getLength() {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-    let length = 0;
-    for (let char of this.resultChain) {
-      if (char === '(') {
-        length += 1;
-      }
-    }
+    let length = this.currentArray.length;
     return length;
 
   },
@@ -26,16 +22,18 @@ const chainMaker = {
     // remove line with error and write your code here
     if (this.checkChain) {
       if (typeof value === 'undefined') {
-        this.resultChain += this.simpleChain;
+        this.currentArray.push(`(  )`);
         return this;
       } else {
-        let valueString = String(value);
-        this.resultChain += `( ${valueString} )~~`;
+        let valueString = '( ' + String(value) + ' )';
+        this.currentArray.push(valueString);
         return this;
       }
-    } else {
+    } else if (!this.checkChain){
       this.resultChain = '';
+      this.currentArray = [];
       this.checkChain = true;
+      this.addLink(value);
     }
 
 
@@ -43,66 +41,31 @@ const chainMaker = {
   removeLink(position) {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-    if (typeof position !== 'number' || position < 1) {
-      this.resultChain = '';
+    if (!this.currentArray[position - 1]) {
       throw new Error('You can\'t remove incorrect link!');
     }
-    if (this.checkChain) {
-      let arr = [];
-      let newArr = [];
-      arr = this.resultChain.split('~~');
-      if (arr[position - 1] !== undefined) {
-        for (let i = 0; i < arr.length; i += 1) {
-          if (i !== position - 1) {
-            newArr.push(arr[i]);
-          }
-        }
-        this.resultChain = newArr.join('~~');
-        arr = [];
-        newArr = [];
-
-      } else {
-        this.resultChain = '';
-        throw new Error('You can\'t remove incorrect link!');
+    if (this.checkChain && this.currentArray[position - 1]) {
+        this.currentArray.splice(position - 1, 1);
       }
       return this;
-    }
-
   },
   reverseChain() {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
     if (!this.checkChain) {
-      this.resultChain = '';
       return this;
     }
     if (this.checkChain) {
-      let arr = [];
-      if (this.getLength() > 1) {
-        arr = this.resultChain.split('~~');
-        this.resultChain = arr.reverse().join('~~');
-        return this;
-      } else {
-        arr = this.resultChain.split('');
-        this.resultChain = arr.reverse().join('');
-        return this;
-      }
-
+      this.currentArray.reverse();
+      return this;
     }
   },
   finishChain() {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-    this.resultChain = String(this.resultChain);
-    if (this.resultChain.endsWith('~~')) {
-      this.checkChain = false;
-      return this.resultChain.slice(0, -2);
-    }
-    if (this.resultChain.startsWith('~~')) {
-      this.checkChain = false;
-      return this.resultChain.slice(2);
-    }
-    this.resultChain = '';
+    this.resultChain = this.currentArray.join('~~');
+    this.currentArray.length = 0;
+    return this.resultChain;
   }
 };
 

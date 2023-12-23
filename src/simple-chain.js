@@ -41,7 +41,7 @@ const chainMaker = {
   removeLink(position) {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-    if (position < 1 || position > this.getLength()) {
+    if (position < 1 || position > this.getLength() || typeof position !== 'number') {
       this.currentArray = [];
       this.resultChain = '';
       this.checkChain = false;

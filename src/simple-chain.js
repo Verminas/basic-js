@@ -22,7 +22,7 @@ const chainMaker = {
     // remove line with error and write your code here
     if (this.checkChain) {
       if (typeof value === 'undefined') {
-        this.currentArray.push(`(  )`);
+        this.currentArray.push('(  )');
         return this;
       } else {
         let valueString = '( ' + String(value) + ' )';
@@ -41,7 +41,10 @@ const chainMaker = {
   removeLink(position) {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-    if (!this.currentArray[position - 1]) {
+    if (position < 1 || position > this.currentArray.length) {
+      this.currentArray = [];
+      this.resultChain = '';
+      this.checkChain = false;
       throw new Error('You can\'t remove incorrect link!');
     }
     if (this.checkChain && this.currentArray[position - 1]) {
@@ -57,6 +60,7 @@ const chainMaker = {
     }
     if (this.checkChain) {
       this.currentArray.reverse();
+
       return this;
     }
   },
@@ -64,7 +68,7 @@ const chainMaker = {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
     this.resultChain = this.currentArray.join('~~');
-    this.currentArray.length = 0;
+    this.currentArray = [];
     return this.resultChain;
   }
 };

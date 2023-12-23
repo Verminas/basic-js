@@ -8,12 +8,13 @@ const chainMaker = {
   simpleChain: '(  )',
   // chainWithValue: `(${this.value})~~`,
   resultChain: '',
+  checkChain: true,
   getLength() {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
     let length = 0;
     for (let char of this.resultChain) {
-      if (char == '(') {
+      if (char === '(') {
         length += 1;
       }
     }
@@ -23,52 +24,77 @@ const chainMaker = {
   addLink: function(value) {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-    if (value === undefined || value === null) {
-      this.resultChain = this.simpleChain;
-      return this.resultChain;
+    if (this.checkChain) {
+      if (typeof value === 'undefined') {
+        this.resultChain += this.simpleChain;
+        return this;
+      } else {
+        let valueString = String(value);
+        this.resultChain += `( ${valueString} )~~`;
+        return this;
+      }
     } else {
-      this.resultChain += `( ${value} )~~`;
-      return this;
+      this.resultChain = '';
+      this.checkChain = true;
     }
+
 
   },
   removeLink(position) {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-
-    if (typeof position == 'number' && this.resultChain.includes(position)) {
-      let index = this.resultChain.indexOf(position);
-      let lastIndex = this.resultChain.lastIndexOf(position);
-      if (index !== 2 || lastIndex !== 2) {
-        this.resultChain = this.resultChain.slice(0, index - 2) + this.resultChain.slice(index + 5);
-        return this;
-      } else if (index === 2) {
-        this.resultChain = this.resultChain.slice(5);
-        return this;
-      } else if (lastIndex === 2) {
-        this.resultChain = this.resultChain.slice(0, index - 2);
-        return this;
-      }
-
-    } else {
-      throw new Error("You can't remove incorrect link!");
+    if (typeof position !== 'number' || position < 1) {
+      throw new Error('You can\'t remove incorrect link!');
     }
+    if (this.checkChain) {
+      let arr = [];
+      let newArr = [];
+      arr = this.resultChain.split('~~');
+      if ((typeof position === 'number' || typeof position === 'bigint' ) && arr[position - 1] !== undefined) {
+        for (let i = 0; i < arr.length; i += 1) {
+          if (i !== position - 1) {
+            newArr.push(arr[i]);
+          }
+        }
+        this.resultChain = newArr.join('~~');
+
+      } else {
+        throw new Error('You can\'t remove incorrect link!');
+      }
+      return this;
+    }
+
   },
   reverseChain() {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-    let arr = [];
-    arr = this.resultChain.split('~~');
-    this.resultChain = arr.reverse().join('~~');
-    return this;
+    if (!this.checkChain) {
+      this.resultChain = '';
+      return this;
+    }
+    if (this.checkChain) {
+      let arr = [];
+      if (this.getLength() > 1) {
+        arr = this.resultChain.split('~~');
+        this.resultChain = arr.reverse().join('~~');
+        return this;
+      } else {
+        arr = this.resultChain.split('');
+        this.resultChain = arr.reverse().join('');
+        return this;
+      }
+
+    }
   },
   finishChain() {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
     if (this.resultChain.endsWith('~~')) {
+      this.checkChain = false;
       return this.resultChain.slice(0, -2);
     }
     if (this.resultChain.startsWith('~~')) {
+      this.checkChain = false;
       return this.resultChain.slice(2);
     }
   }

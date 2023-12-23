@@ -38,20 +38,21 @@ class VigenereCipheringMachine {
     } else {
       message = message.toUpperCase();
       let newKey = '';
-      while (newKey.length < message.length) {
-        for (let i = 0; i < key.length; i++) {
-          newKey += key[i];
-          if ( i === key.length) {
-            i = 0;
-          }
+      let keyIndex = 0;
+      for (let i = 0; i < message.length; i++) {
+        if (this.alphabet.includes(message[i])) {
+            newKey += key[keyIndex];
+            keyIndex = (keyIndex + 1) % key.length;
+        } else {
+          newKey += message[i];
         }
       }
       newKey = newKey.toUpperCase();
       let encryptMessage = '';
       let cipherChar = '';
       for (let i = 0; i < message.length; i++) {
-      let indexCharMessage = this.alphabet.indexOf(i);
-      let indexCharNewKey = this.alphabet.indexOf(i);
+      let indexCharMessage = this.alphabet.indexOf(message[i]);
+      let indexCharNewKey = this.alphabet.indexOf(newKey[i]);
       if (indexCharMessage !== -1) {
         cipherChar = this.squareVigenere[indexCharMessage][indexCharNewKey];
       } else {
